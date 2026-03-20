@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 263 70% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 20%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 347 77% 63%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --ai: 263 70% 58%;
+    --ai-foreground: 0 0% 100%;
+
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 263 70% 58%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-primary: 263 70% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 33% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 263 70% 58%;
+
+    /* Glass tokens */
+    --glass-bg: 0 0% 100% / 0.03;
+    --glass-border: 0 0% 100% / 0.08;
+    --glass-hover: 0 0% 100% / 0.06;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 263 70% 58%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 347 77% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 160 84% 39%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+
+    --ai: 263 70% 58%;
+    --ai-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 263 70% 58%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 16% 47%;
+    --sidebar-primary: 263 70% 58%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 263 70% 58%;
+
+    --glass-bg: 0 0% 0% / 0.02;
+    --glass-border: 0 0% 0% / 0.08;
+    --glass-hover: 0 0% 0% / 0.04;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: var(--font-sans);
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border backdrop-blur-xl;
+    background: hsl(var(--glass-bg));
+    border-color: hsl(var(--glass-border));
+    box-shadow: 0 0 0 1px hsl(var(--glass-border)), 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .glass-card:hover {
+    background: hsl(var(--glass-hover));
+  }
+
+  .gradient-violet {
+    background: linear-gradient(135deg, hsl(263 70% 58%), hsl(280 80% 65%));
+  }
+
+  .gradient-emerald {
+    background: linear-gradient(135deg, hsl(160 84% 39%), hsl(150 80% 45%));
+  }
+
+  .gradient-rose {
+    background: linear-gradient(135deg, hsl(347 77% 63%), hsl(330 70% 55%));
+  }
+
+  .gradient-amber {
+    background: linear-gradient(135deg, hsl(38 92% 50%), hsl(45 95% 55%));
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02];
+  }
+
+  .text-gradient-violet {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(263 70% 58%), hsl(280 80% 70%));
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+}
