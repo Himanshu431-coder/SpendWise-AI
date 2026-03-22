@@ -1,13 +1,11 @@
-
-SpendWise AI — FastAPI Server
-Complete REST API with 10 AI endpoints
-"""
+# main.py
+# the actual server - runs the API and handles all requests
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from collections import defaultdict
 import json
 import os
@@ -23,16 +21,14 @@ from models import (
 from ai_engine import SpendWiseAI
 
 
-# ═══════════════════════════════════════════════════════
-# APP SETUP
-# ═══════════════════════════════════════════════════════
-
+# set up the app
 app = FastAPI(
     title="SpendWise AI",
-    description="AI-Powered Personal Finance Tracker — Backend API",
+    description="Backend API for the expense tracker",
     version="2.0.0"
 )
 
+# allow the frontend to talk to this server
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,18 +37,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize AI Engine
+# load up the AI engine
 ai = SpendWiseAI()
 
-# Data file
+# where we store the data
 DATA_FILE = "spendwise_data.json"
 
 
-# ═══════════════════════════════════════════════════════
-# DATA PERSISTENCE
-# ═══════════════════════════════════════════════════════
+# --- data loading and saving ---
 
-def load_data() -> dict:
+def load_data():
     if not os.path.exists(DATA_FILE) or os.path.getsize(DATA_FILE) == 0:
         return {"transactions": []}
     try:
@@ -62,19 +56,17 @@ def load_data() -> dict:
         return {"transactions": []}
 
 
-def save_data(data: dict):
+def save_data(data):
     with open(DATA_FILE, 'w') as f:
         json.dump(data, f, indent=2)
 
 
-def get_transactions() -> list[Transaction]:
+def get_transactions():
     data = load_data()
     return [Transaction(**t) for t in data["transactions"]]
 
 
-# ═══════════════════════════════════════════════════════
-# CORE ENDPOINTS
-# ═══════════════════════════════════════════════════════
+# --- basic routes ---
 
 @app.get("/")
 def root():
@@ -82,27 +74,25 @@ def root():
         "app": "SpendWise AI",
         "version": "2.0.0",
         "status": "running",
-        "message": "Backend API is live! Visit /docs for documentation."
+        "message": "Backend is live. Go to /docs for the API playground."
     }
 
 
 @app.get("/api/transactions")
 def list_transactions():
-    """Get all transactions"""
     data = load_data()
     return {"transactions": data["transactions"], "count": len(data["transactions"])}
 
 
 @app.post("/api/transactions")
 def add_transaction(expense: TransactionInput):
-    """Add a new transaction"""
     data = load_data()
 
     sentiment = ai._analyze_spending_sentiment(
         expense.description.lower(), expense.category
     )
 
-    new_transaction = {
+    new_txn = {
         "id": str(uuid.uuid4())[:8],
         "date": expense.date,
         "category": expense.category,
@@ -115,22 +105,18 @@ def add_transaction(expense: TransactionInput):
         "ai_category_confidence": 0.0
     }
 
-    data["transactions"].append(new_transaction)
+    data["transactions"].append(new_txn)
     save_data(data)
 
-    return {
-        "message": "Transaction added successfully!",
-        "transaction": new_transaction
-    }
+    return {"message": "Transaction added!", "transaction": new_txn}
 
 
-@app.put("/api/transactions/{transaction_id}")
-def update_transaction(transaction_id: str, expense: TransactionInput):
-    """Update a transaction"""
+@app.put("/api/transactions/{txn_id}")
+def update_transaction(txn_id: str, expense: TransactionInput):
     data = load_data()
 
     for i, t in enumerate(data["transactions"]):
-        if t["id"] == transaction_id:
+        if t["id"] == txn_id:
             data["transactions"][i].update({
                 "date": expense.date,
                 "category": expense.category,
@@ -140,45 +126,39 @@ def update_transaction(transaction_id: str, expense: TransactionInput):
                 "tags": expense.tags
             })
             save_data(data)
-            return {
-                "message": "Updated!",
-                "transaction": data["transactions"][i]
-            }
+            return {"message": "Updated!", "transaction": data["transactions"][i]}
 
     raise HTTPException(status_code=404, detail="Transaction not found")
 
 
-@app.delete("/api/transactions/{transaction_id}")
-def delete_transaction(transaction_id: str):
-    """Delete a transaction"""
+@app.delete("/api/transactions/{txn_id}")
+def delete_transaction(txn_id: str):
     data = load_data()
-    original = len(data["transactions"])
+    original_count = len(data["transactions"])
 
     data["transactions"] = [
         t for t in data["transactions"]
-        if t["id"] != transaction_id
+        if t["id"] != txn_id
     ]
 
-    if len(data["transactions"]) == original:
+    if len(data["transactions"]) == original_count:
         raise HTTPException(status_code=404, detail="Not found")
 
     save_data(data)
-    return {"message": "Deleted successfully!"}
+    return {"message": "Deleted!"}
 
 
-# ═══════════════════════════════════════════════════════
-# SUMMARY ENDPOINTS
-# ═══════════════════════════════════════════════════════
+# --- summary endpoint for the dashboard ---
 
 @app.get("/api/summary")
 def get_full_summary():
-    """Complete financial summary"""
     transactions = get_transactions()
 
     total_income = sum(t.amount for t in transactions if t.type == TransactionType.INCOME)
     total_expense = sum(t.amount for t in transactions if t.type == TransactionType.EXPENSE)
     balance = total_income - total_expense
 
+    # category breakdown
     cat_totals = defaultdict(float)
     cat_counts = defaultdict(int)
     for t in transactions:
@@ -192,12 +172,13 @@ def get_full_summary():
             "total": round(amount, 2),
             "count": cat_counts[cat],
             "percentage": round((amount / total_expense * 100) if total_expense > 0 else 0, 1),
-            "icon": CategoryInfo.get_info(cat).get("icon", "📦"),
+            "icon": CategoryInfo.get_info(cat).get("icon", "O"),
             "color": CategoryInfo.get_info(cat).get("color", "#6b7280")
         }
         for cat, amount in sorted(cat_totals.items(), key=lambda x: x[1], reverse=True)
     ]
 
+    # monthly trend
     monthly = defaultdict(lambda: {"income": 0, "expense": 0})
     for t in transactions:
         try:
@@ -214,13 +195,14 @@ def get_full_summary():
     monthly_trend = [
         {
             "month": month,
-            "income": round(data["income"], 2),
-            "expense": round(data["expense"], 2),
-            "savings": round(data["income"] - data["expense"], 2)
+            "income": round(d["income"], 2),
+            "expense": round(d["expense"], 2),
+            "savings": round(d["income"] - d["expense"], 2)
         }
-        for month, data in sorted(monthly.items())
+        for month, d in sorted(monthly.items())
     ]
 
+    # daily trend (last 30 days)
     daily = defaultdict(float)
     for t in transactions:
         if t.type == TransactionType.EXPENSE:
@@ -231,6 +213,7 @@ def get_full_summary():
         for d, amt in sorted(daily.items())
     ][-30:]
 
+    # health score
     health = ai.calculate_financial_health(transactions)
 
     return {
@@ -250,9 +233,7 @@ def get_full_summary():
     }
 
 
-# ═══════════════════════════════════════════════════════
-# AI ENDPOINTS
-# ═══════════════════════════════════════════════════════
+# --- AI endpoints ---
 
 class TextInput(BaseModel):
     text: str
@@ -260,14 +241,12 @@ class TextInput(BaseModel):
 
 @app.post("/api/ai/parse")
 def ai_parse_expense(input_data: TextInput):
-    """AI Natural Language Parser"""
     result = ai.parse_expense_text(input_data.text)
     return result.dict()
 
 
 @app.get("/api/ai/insights")
 def ai_get_insights():
-    """AI-Generated Financial Insights"""
     transactions = get_transactions()
     insights = ai.generate_insights(transactions)
     return {"insights": [i.dict() for i in insights]}
@@ -275,7 +254,6 @@ def ai_get_insights():
 
 @app.get("/api/ai/health-score")
 def ai_health_score():
-    """AI Financial Health Score"""
     transactions = get_transactions()
     health = ai.calculate_financial_health(transactions)
     return health.dict()
@@ -283,7 +261,6 @@ def ai_health_score():
 
 @app.get("/api/ai/forecast")
 def ai_forecast(days: int = 30):
-    """AI Spending Forecast"""
     transactions = get_transactions()
     forecast = ai.forecast_spending(transactions, days_ahead=days)
     return forecast.dict()
@@ -291,7 +268,6 @@ def ai_forecast(days: int = 30):
 
 @app.get("/api/ai/anomalies")
 def ai_anomalies():
-    """AI Anomaly Detection"""
     transactions = get_transactions()
     anomalies = ai.detect_anomalies(transactions)
     return {
@@ -302,7 +278,6 @@ def ai_anomalies():
 
 @app.get("/api/ai/suggest-budgets")
 def ai_suggest_budgets():
-    """AI Budget Suggestions"""
     transactions = get_transactions()
     suggestions = ai.suggest_budgets(transactions)
     return {
@@ -313,19 +288,15 @@ def ai_suggest_budgets():
 
 @app.post("/api/ai/query")
 def ai_query(input_data: TextInput):
-    """AI Natural Language Query Engine"""
     transactions = get_transactions()
     result = ai.answer_query(input_data.text, transactions)
     return result.dict()
 
 
-# ═══════════════════════════════════════════════════════
-# UTILITY ENDPOINTS
-# ═══════════════════════════════════════════════════════
+# --- utility stuff ---
 
 @app.get("/api/categories")
 def get_categories():
-    """Get all available categories"""
     return {
         cat: {
             "icon": info["icon"],
@@ -338,9 +309,8 @@ def get_categories():
 
 @app.get("/api/export/csv")
 def export_csv():
-    """Export all transactions as CSV"""
     data = load_data()
-    transactions = data["transactions"]
+    txns = data["transactions"]
 
     output = io.StringIO()
     writer = csv.DictWriter(
@@ -348,7 +318,7 @@ def export_csv():
         fieldnames=["id", "date", "category", "description", "amount", "type", "sentiment"]
     )
     writer.writeheader()
-    for t in transactions:
+    for t in txns:
         writer.writerow({
             "id": t.get("id", ""),
             "date": t.get("date", ""),
@@ -369,8 +339,8 @@ def export_csv():
 
 @app.post("/api/demo/load")
 def load_demo_data():
-    """Load sample transactions for demo"""
-    categories_items = {
+    # generates a bunch of fake transactions so the app has something to show
+    sample_items = {
         "Food & Dining": [
             ("Lunch at canteen", 150, 300),
             ("Zomato order", 200, 600),
@@ -407,14 +377,16 @@ def load_demo_data():
     transactions = []
     today = date.today()
 
+    # create 60 days worth of transactions
     for days_ago in range(60):
-        current_date = today - __import__('datetime').timedelta(days=days_ago)
+        current_date = today - timedelta(days=days_ago)
         date_str = current_date.isoformat()
 
-        num_transactions = random.randint(2, 5)
-        for _ in range(num_transactions):
-            cat = random.choice(list(categories_items.keys()))
-            item = random.choice(categories_items[cat])
+        # 2 to 5 expenses per day
+        num_txns = random.randint(2, 5)
+        for _ in range(num_txns):
+            cat = random.choice(list(sample_items.keys()))
+            item = random.choice(sample_items[cat])
             desc, min_amt, max_amt = item
             amount = random.randint(min_amt, max_amt)
 
@@ -433,8 +405,9 @@ def load_demo_data():
                 "ai_category_confidence": 0.9
             })
 
+    # add a couple salary entries too
     for month_offset in range(2):
-        salary_date = today.replace(day=1) - __import__('datetime').timedelta(days=month_offset * 30)
+        salary_date = today.replace(day=1) - timedelta(days=month_offset * 30)
         transactions.append({
             "id": str(uuid.uuid4())[:8],
             "date": salary_date.isoformat(),
@@ -452,21 +425,19 @@ def load_demo_data():
     save_data(data)
 
     return {
-        "message": f"Loaded {len(transactions)} demo transactions!",
+        "message": "Loaded " + str(len(transactions)) + " demo transactions!",
         "count": len(transactions)
     }
 
 
-# ═══════════════════════════════════════════════════════
-# RUN SERVER
-# ═══════════════════════════════════════════════════════
+# --- run the server ---
 
 if __name__ == "__main__":
     import uvicorn
-    print("=" * 60)
-    print("  🧠 SpendWise AI — Backend Server")
-    print("  📍 http://localhost:8000")
-    print("  📚 API Docs: http://localhost:8000/docs")
-    print("  💡 Load demo data: POST /api/demo/load")
-    print("=" * 60)
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    print("=" * 55)
+    print("  SpendWise AI - Backend Server")
+    print("  Server: http://localhost:8000")
+    print("  API Docs: http://localhost:8000/docs")
+    print("  Demo data: POST /api/demo/load")
+    print("=" * 55)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

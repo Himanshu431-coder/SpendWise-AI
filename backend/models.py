@@ -1,4 +1,5 @@
-"""SpendWise AI — Data Models"""
+# models.py
+# data models for the expense tracker
 
 from pydantic import BaseModel, Field
 from typing import Optional, Literal
@@ -8,9 +9,13 @@ import uuid
 
 
 class CategoryInfo:
+    # all expense categories with their keywords, colors, icons
+    # used by the AI engine to auto-detect categories from text
+
     CATEGORIES = {
         "Food & Dining": {
-            "icon": "🍔", "color": "#f97316",
+            "icon": "F",
+            "color": "#f97316",
             "keywords": [
                 "food", "lunch", "dinner", "breakfast", "snack",
                 "restaurant", "cafe", "coffee", "tea", "pizza",
@@ -21,7 +26,8 @@ class CategoryInfo:
             "monthly_benchmark": 8000
         },
         "Transportation": {
-            "icon": "🚗", "color": "#3b82f6",
+            "icon": "T",
+            "color": "#3b82f6",
             "keywords": [
                 "uber", "ola", "cab", "taxi", "bus", "metro",
                 "fuel", "petrol", "diesel", "parking", "train",
@@ -30,7 +36,8 @@ class CategoryInfo:
             "monthly_benchmark": 3000
         },
         "Entertainment": {
-            "icon": "🎬", "color": "#ec4899",
+            "icon": "E",
+            "color": "#ec4899",
             "keywords": [
                 "movie", "netflix", "spotify", "gaming", "concert",
                 "party", "outing", "subscription", "hotstar", "prime",
@@ -39,7 +46,8 @@ class CategoryInfo:
             "monthly_benchmark": 2000
         },
         "Shopping": {
-            "icon": "🛍️", "color": "#a855f7",
+            "icon": "S",
+            "color": "#a855f7",
             "keywords": [
                 "amazon", "flipkart", "clothes", "shoes", "electronics",
                 "gadget", "mall", "shopping", "bought", "purchase",
@@ -48,7 +56,8 @@ class CategoryInfo:
             "monthly_benchmark": 5000
         },
         "Housing": {
-            "icon": "🏠", "color": "#eab308",
+            "icon": "H",
+            "color": "#eab308",
             "keywords": [
                 "rent", "maintenance", "electricity", "water", "gas",
                 "internet", "wifi", "phone", "recharge", "bill",
@@ -57,7 +66,8 @@ class CategoryInfo:
             "monthly_benchmark": 15000
         },
         "Healthcare": {
-            "icon": "💊", "color": "#ef4444",
+            "icon": "M",
+            "color": "#ef4444",
             "keywords": [
                 "medicine", "doctor", "hospital", "gym", "pharmacy",
                 "medical", "health", "clinic", "dentist", "checkup"
@@ -65,7 +75,8 @@ class CategoryInfo:
             "monthly_benchmark": 2000
         },
         "Education": {
-            "icon": "📚", "color": "#06b6d4",
+            "icon": "B",
+            "color": "#06b6d4",
             "keywords": [
                 "book", "course", "udemy", "tutorial", "stationery",
                 "tuition", "fees", "college", "school", "exam",
@@ -74,7 +85,8 @@ class CategoryInfo:
             "monthly_benchmark": 3000
         },
         "Travel": {
-            "icon": "✈️", "color": "#14b8a6",
+            "icon": "A",
+            "color": "#14b8a6",
             "keywords": [
                 "trip", "hotel", "booking", "travel", "vacation",
                 "holiday", "tour", "airbnb", "resort", "oyo"
@@ -82,7 +94,8 @@ class CategoryInfo:
             "monthly_benchmark": 5000
         },
         "Investments": {
-            "icon": "📈", "color": "#22c55e",
+            "icon": "I",
+            "color": "#22c55e",
             "keywords": [
                 "sip", "mutual fund", "stocks", "invest", "fd",
                 "rd", "ppf", "crypto", "trading", "gold"
@@ -90,7 +103,8 @@ class CategoryInfo:
             "monthly_benchmark": 10000
         },
         "Others": {
-            "icon": "📦", "color": "#6b7280",
+            "icon": "O",
+            "color": "#6b7280",
             "keywords": [],
             "monthly_benchmark": 2000
         }
