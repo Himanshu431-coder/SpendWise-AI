@@ -2499,6 +2499,30 @@
       "sentiment": "necessary",
       "created_at": "2026-03-21T20:46:28.398289",
       "ai_category_confidence": 1.0
+    },
+    {
+      "id": "9c539682",
+      "date": "2026-03-22",
+      "category": "Food & Dining",
+      "description": "Spent  on lunch",
+      "amount": 500.0,
+      "type": "expense",
+      "tags": [],
+      "sentiment": "necessary",
+      "created_at": "2026-03-22T21:15:03.054392",
+      "ai_category_confidence": 0.0
+    },
+    {
+      "id": "9910b576",
+      "date": "2026-04-08",
+      "category": "Transport",
+      "description": "Spent  on uber",
+      "amount": 300.0,
+      "type": "expense",
+      "tags": [],
+      "sentiment": "necessary",
+      "created_at": "2026-04-08T22:10:24.275172",
+      "ai_category_confidence": 0.0
     }
   ]
 }

@@ -11,8 +11,9 @@ import {
 import { useMemo } from "react";
 
 export default function Dashboard() {
-  const { transactions, budgets, currencySymbol } = useApp();
+  const { transactions, budgets, currencySymbol, loading } = useApp();
 
+  // ALL HOOKS MUST COME FIRST - before any conditional returns
   const totalIncome = useMemo(() => transactions.filter((t) => t.type === "income").reduce((s, t) => s + t.amount, 0), [transactions]);
   const totalExpense = useMemo(() => transactions.filter((t) => t.type === "expense").reduce((s, t) => s + t.amount, 0), [transactions]);
   const balance = totalIncome - totalExpense;
@@ -40,6 +41,18 @@ export default function Dashboard() {
   }, [transactions]);
 
   const recentTxns = useMemo(() => transactions.slice(0, 10), [transactions]);
+
+  // NOW conditional returns are safe (after all hooks)
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground">Loading your financial data...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (transactions.length === 0) return <WelcomeScreen />;
 

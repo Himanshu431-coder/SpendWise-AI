@@ -67,6 +67,7 @@ class SpendWiseAI:
                 except:
                     amount = None
 
+        # Extract date - FIXED
         today = date.today()
         extracted_date = today.isoformat()
 
