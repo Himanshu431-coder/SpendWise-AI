@@ -78,6 +78,11 @@ def root():
     }
 
 
+@app.get("/healthz")
+def health_check():
+    return {"status": "healthy"}
+
+
 @app.get("/api/transactions")
 def list_transactions():
     data = load_data()
@@ -224,9 +229,9 @@ def get_full_summary():
         "categories": categories,
         "monthly_trend": monthly_trend,
         "daily_trend": daily_trend,
-        "health_score": health.dict(),
+        "health_score": health.model_dump(),
         "recent_transactions": [
-            t.dict() for t in sorted(
+            t.model_dump() for t in sorted(
                 transactions, key=lambda x: x.created_at, reverse=True
             )[:10]
         ]
@@ -242,28 +247,28 @@ class TextInput(BaseModel):
 @app.post("/api/ai/parse")
 def ai_parse_expense(input_data: TextInput):
     result = ai.parse_expense_text(input_data.text)
-    return result.dict()
+    return result.model_dump()
 
 
 @app.get("/api/ai/insights")
 def ai_get_insights():
     transactions = get_transactions()
     insights = ai.generate_insights(transactions)
-    return {"insights": [i.dict() for i in insights]}
+    return {"insights": [i.model_dump() for i in insights]}
 
 
 @app.get("/api/ai/health-score")
 def ai_health_score():
     transactions = get_transactions()
     health = ai.calculate_financial_health(transactions)
-    return health.dict()
+    return health.model_dump()
 
 
 @app.get("/api/ai/forecast")
 def ai_forecast(days: int = 30):
     transactions = get_transactions()
     forecast = ai.forecast_spending(transactions, days_ahead=days)
-    return forecast.dict()
+    return forecast.model_dump()
 
 
 @app.get("/api/ai/anomalies")
@@ -271,7 +276,7 @@ def ai_anomalies():
     transactions = get_transactions()
     anomalies = ai.detect_anomalies(transactions)
     return {
-        "anomalies": [a.dict() for a in anomalies],
+        "anomalies": [a.model_dump() for a in anomalies],
         "count": len(anomalies)
     }
 
@@ -281,7 +286,7 @@ def ai_suggest_budgets():
     transactions = get_transactions()
     suggestions = ai.suggest_budgets(transactions)
     return {
-        "suggestions": [s.dict() for s in suggestions],
+        "suggestions": [s.model_dump() for s in suggestions],
         "count": len(suggestions)
     }
 
@@ -290,7 +295,7 @@ def ai_suggest_budgets():
 def ai_query(input_data: TextInput):
     transactions = get_transactions()
     result = ai.answer_query(input_data.text, transactions)
-    return result.dict()
+    return result.model_dump()
 
 
 # --- utility stuff ---
