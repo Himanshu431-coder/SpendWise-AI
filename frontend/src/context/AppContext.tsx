@@ -197,18 +197,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [refreshTransactions]);
 
-  const clearAllData = useCallback(() => {
-    setTransactions([]);
-    setBudgets([]);
-    toast.info("All data cleared locally. Refresh to sync with backend.");
-  }, []);
-
-  const importTransactions = useCallback((txns: Transaction[]) => {
-    setTransactions((prev) =>
-      [...prev, ...txns].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      )
-    );
+  const clearAllData = useCallback(async () => {
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/transactions`, {
+        method: "DELETE",
+      });
+      setTransactions([]);
+      setBudgets([]);
+      toast.success("All data cleared!");
+    } catch {
+      setTransactions([]);
+      setBudgets([]);
+      toast.info("Data cleared locally.");
+    }
   }, []);
 
   return (

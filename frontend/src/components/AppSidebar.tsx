@@ -79,13 +79,30 @@ export function AppSidebar() {
           </div>
         )}
 
+        {/* Developer Credit */}
+        {!collapsed && (
+          <div className="p-4 border-t border-border/50">
+            <p className="text-xs text-muted-foreground text-center">
+              Built by{" "}
+              <span className="font-semibold text-foreground">
+                Himanshu Kundan Tapde
+              </span>
+            </p>
+          </div>
+        )}
+
         {/* Avatar placeholder */}
         <div className="p-4 border-t border-border mt-auto">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-              <span className="text-xs font-bold text-primary">U</span>
+              <span className="text-xs font-bold text-primary">H</span>
             </div>
-            {!collapsed && <span className="text-xs text-muted-foreground">Portfolio User</span>}
+            {!collapsed && (
+              <div className="flex flex-col">
+                <span className="text-xs font-medium text-foreground">Himanshu Tapde</span>
+                <span className="text-[10px] text-muted-foreground">Developer</span>
+              </div>
+            )}
           </div>
         </div>
       </SidebarContent>

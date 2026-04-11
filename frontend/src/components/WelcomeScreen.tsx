@@ -1,5 +1,5 @@
 import { useApp } from "@/context/AppContext";
-import { Brain, Sparkles, ArrowRight } from "lucide-react";
+import { Brain, Sparkles, ArrowRight, Github, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -56,6 +56,39 @@ export function WelcomeScreen() {
             Load Demo Data
           </Button>
         </div>
+
+        {/* Developer Credit */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          className="pt-8 border-t border-border/50"
+        >
+          <p className="text-sm text-muted-foreground">
+            Designed & Developed by
+          </p>
+          <p className="text-base font-semibold text-foreground mt-1">
+            Himanshu Kundan Tapde
+          </p>
+          <div className="flex items-center justify-center gap-4 mt-3">
+            <a
+              href="https://github.com/Himanshu431-coder"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Github size={18} />
+            </a>
+            <a
+              href="https://linkedin.com/in/himanshutapde"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <Linkedin size={18} />
+            </a>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );

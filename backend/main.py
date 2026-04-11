@@ -152,6 +152,11 @@ def delete_transaction(txn_id: str):
     save_data(data)
     return {"message": "Deleted!"}
 
+@app.delete("/api/transactions")
+def clear_all_transactions():
+    save_data({"transactions": []})
+    return {"message": "All transactions cleared!"}
+
 
 # --- summary endpoint for the dashboard ---
 
