@@ -32,7 +32,6 @@ function loadFromStorage<T>(key: string, fallback: T): T {
   }
 }
 
-// Convert backend transaction to frontend format
 function mapTransaction(t: TransactionAPI): Transaction {
   return {
     id: t.id,
@@ -55,7 +54,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   );
   const [loading, setLoading] = useState(true);
 
-  // Budgets and settings still use localStorage (no backend endpoint for these yet)
   useEffect(() => {
     localStorage.setItem("sw_budgets", JSON.stringify(budgets));
   }, [budgets]);
@@ -65,12 +63,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.classList.toggle("light", settings.theme === "light");
   }, [settings]);
 
-  // Apply theme on mount
   useEffect(() => {
     document.documentElement.classList.toggle("light", settings.theme === "light");
   }, []);
 
-  // Fetch transactions from backend on mount
   const refreshTransactions = useCallback(async () => {
     try {
       setLoading(true);
@@ -80,7 +76,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error("Failed to load transactions:", error);
       toast.error("Could not connect to backend. Using local data.");
-      // Fallback to localStorage if backend is down
       setTransactions(loadFromStorage("sw_transactions", []));
     } finally {
       setLoading(false);
@@ -106,7 +101,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         toast.success("Transaction added!");
       } catch (error: any) {
         toast.error("Failed to add transaction: " + error.message);
-        // Fallback to local add
         const newT: Transaction = {
           ...t,
           id: crypto.randomUUID?.() || Math.random().toString(36).slice(2),
@@ -133,7 +127,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         toast.success("Transaction updated!");
       } catch (error: any) {
         toast.error("Failed to update: " + error.message);
-        // Fallback
         setTransactions((prev) => prev.map((x) => (x.id === t.id ? t : x)));
       }
     },
@@ -148,7 +141,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         toast.success("Transaction deleted!");
       } catch (error: any) {
         toast.error("Failed to delete: " + error.message);
-        // Fallback
         setTransactions((prev) => prev.filter((x) => x.id !== id));
       }
     },
@@ -191,7 +183,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       await refreshTransactions();
     } catch (error: any) {
       toast.error("Failed to load demo data: " + error.message);
-      // Fallback to local demo data
       const { generateDemoData } = await import("@/lib/demo-data");
       setTransactions(generateDemoData());
     }
@@ -199,9 +190,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const clearAllData = useCallback(async () => {
     try {
-      await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/transactions`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:8000"}/api/transactions`,
+        { method: "DELETE" }
+      );
       setTransactions([]);
       setBudgets([]);
       toast.success("All data cleared!");
@@ -210,6 +202,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setBudgets([]);
       toast.info("Data cleared locally.");
     }
+  }, []);
+
+  const importTransactions = useCallback((txns: Transaction[]) => {
+    setTransactions((prev) =>
+      [...prev, ...txns].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      )
+    );
   }, []);
 
   return (
