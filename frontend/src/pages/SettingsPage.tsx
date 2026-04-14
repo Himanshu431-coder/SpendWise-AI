@@ -114,7 +114,7 @@ export default function SettingsPage() {
             <span key={t} className="px-2 py-1 text-[10px] font-medium rounded-md bg-primary/10 text-primary">{t}</span>
           ))}
         </div>
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
+        <a href="https://github.com/Himanshu431-coder" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors">
           <Github size={14} /> View on GitHub
         </a>
       </div>
