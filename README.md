@@ -144,15 +144,16 @@ graph TB
 <details>
 <summary><b>🖥️ View Screenshots</b></summary>
 
-*(Add your actual screenshots to the `assets/` folder)*
+|                 Dashboard                 |          Natural Language Input          |                AI Forecasting               |
+| :---------------------------------------: | :--------------------------------------: | :-----------------------------------------: |
+| ![Dashboard](./assets/dashboard-main.png) | ![NLP Parsing](./assets/nlp-parsing.png) | ![Forecast](./assets/forecasting-chart.png) |
 
-| Dashboard | Natural Language Input | AI Forecasting |
-|:---------:|:---------:|:-------:|
-| ![Dashboard](./assets/dashboard.png) | ![Input](./assets/input.png) | ![Forecast](./assets/forecast.png) |
+|       AI Budget Recommendation       |
+| :----------------------------------: |
+| ![AI Budget](./assets/ai-budget.png) |
 
-| Anomaly Detection | Spending Personas |
-|:-----------:|:-----------:|
-| ![Anomalies](./assets/anomalies.png) | ![Personas](./assets/personas.png) |
+</details>
+
 
 </details>
 
