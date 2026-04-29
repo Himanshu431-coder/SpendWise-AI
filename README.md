@@ -25,7 +25,7 @@ Natural Language Processing, and real-time anomaly detection.**
 
 <br>
 
-[🌐 **Live Demo**](https://spendwise-ai.vercel.app) · [📖 **API Docs**](https://spendwise-ai-backend.onrender.com/docs) · [🧠 **ML Pipeline**](./backend/models) · [📊 **Frontend**](./frontend)
+[🌐 **Live Demo**](https://spend-wise-ai-seven.vercel.app) · [📖 **API Docs**](https://spendwise-ai-backend.onrender.com/docs) · [🧠 **ML Pipeline**](./backend/models) · [📊 **Frontend**](./frontend)
 
 <br>
 
