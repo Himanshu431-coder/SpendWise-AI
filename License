@@ -1,0 +1,91 @@
+# CUSTOM MIT + PROPRIETARY LICENSE
+
+Copyright (c) 2026 Himanshu Tapde
+
+---
+
+## Permission
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to:
+
+* View and explore the code
+* Use the Software for learning, evaluation, and non-commercial purposes
+* Run the application locally for testing
+
+---
+
+## Restrictions (IMPORTANT)
+
+The following are strictly prohibited without explicit written permission:
+
+* Copying, reproducing, or redistributing the Software
+* Using the Software in any commercial or production environment
+* Modifying and republishing the Software as your own project
+* Forking or cloning this repository for public or commercial use
+* Using this project as a template or base for another project
+
+---
+
+## Proprietary Components
+
+The following components are **NOT open source** and remain the exclusive
+intellectual property of the Licensor:
+
+* Machine Learning models (Naive Bayes, Prophet, Isolation Forest, etc.)
+* Model weights, training pipelines, and artifacts
+* Datasets and feature engineering logic
+* Budget recommendation system and business logic
+
+These components may not be copied, reused, modified, or distributed.
+
+---
+
+## Ownership
+
+The Software is the exclusive intellectual property of Himanshu Tapde.
+All rights, title, and interest remain with the Licensor.
+
+---
+
+## Recruiter / Evaluator Exception
+
+Recruiters and evaluators are permitted to:
+
+* View the repository
+* Review the source code
+
+Strictly for evaluation purposes only. No reuse is permitted.
+
+---
+
+## Enforcement
+
+Unauthorized use of this Software may result in legal action, including:
+
+* Copyright claims
+* DMCA takedowns
+* Financial damages
+
+---
+
+## Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+---
+
+## Governing Law
+
+This Agreement shall be governed by the laws of India.
+
+---
+
+```
+================================================================================
+(C) 2026 Himanshu Tapde. All rights reserved.
+Unauthorized use, reproduction, or distribution is strictly prohibited.
+================================================================================
+```
