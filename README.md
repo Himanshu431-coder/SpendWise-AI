@@ -194,7 +194,7 @@ graph TB
 
 | Service | URL | Status |
 |:--------|:----|:-------|
-| **App** | [spendwise-ai.vercel.app](https://spendwise-ai.vercel.app) | ![Deploy](https://img.shields.io/website?url=https%3A%2F%2Fspendwise-ai.vercel.app&style=flat-square) |
+| **App** | [spendwise-ai.vercel.app](https://spend-wise-ai-seven.vercel.app) | ![Deploy](https://img.shields.io/website?url=https%3A%2F%2Fspendwise-ai.vercel.app&style=flat-square) |
 | **API Docs** | [spendwise-ai-backend.onrender.com/docs](https://spendwise-ai-backend.onrender.com/docs) | ![API](https://img.shields.io/website?url=https%3A%2F%2Fspendwise-ai-backend.onrender.com%2Fdocs&style=flat-square) |
 | **CI/CD** | [GitHub Actions](https://github.com/Himanshu431-coder/SpendWise-AI/actions) | ![CI](https://img.shields.io/github/actions/workflow/status/Himanshu431-coder/SpendWise-AI/ci.yml?branch=main&style=flat-square) |
 
